@@ -33,7 +33,7 @@ class ShparkleyModel(object):
 
     @abstractmethod
     def predict(self, feature_matrix):
-        # type: (List[Dict[str, float]]) -> List[float]
+        # type: (List[Dict[str, Any]]) -> List[float]
         """
         Run the machine learning model on a feature matrix and return the predictions for each row.
         :param feature_matrix: Row of feature vectors. Each entry is a dictionary mapping

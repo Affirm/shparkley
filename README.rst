@@ -1,5 +1,5 @@
-Shparkley
-=========
+Shparkley: Scaling Shapley Values with Spark
+=============================================
 
 .. inclusion-marker-start-do-not-remove
 
@@ -12,9 +12,18 @@ which uses a `monte-carlo approximation <https://link.springer.com/article/10.10
 Given a dataset and machine learning model, Shparkley can compute Shapley values for all features for a feature vector.
 Shparkley also handles training weights and is model agnostic.
 
+Installation
+------------
+
+``pip install shparkley``
+
+Requirements
+------------
+You must have Apache Spark installed on your machine/cluster.
+
 
 Example Usage
-------------
+--------------
 
 .. code-block:: python
 
@@ -27,13 +36,15 @@ Example Usage
             """
             Needs to return a set of feature names for the model.
             """
-            return self._model.get_required_features()
+            return ['feature-1', 'feature-2', 'feature-3']
 
         def predict(self, feature_matrix):
-            # type: (List[Dict[str, float]]) -> List[float]
+            # type: (List[Dict[str, Any]]) -> List[float]
             """
             Wrapper function to convert the feature matrix into an acceptable format for your model.
             This function should return the predicted probabilities.
+            The feature_matrix is a list of feature dictionaries.
+            Each dictionary has a mapping from the feature name to the value.
             :return: Model predictions for all feature vectors
             """
             # Convert the feature matrix into an appropriate form for your model object.
