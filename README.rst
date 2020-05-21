@@ -27,6 +27,11 @@ Example Usage
 
 .. code-block:: python
 
+    from affirm.model_interpretation.shparkley.spark_shapley import (
+        compute_shapley_for_sample,
+        ShparkleyModel
+    )
+
     class MyShparkleyModel(ShparkleyModel):
     """
     You need to wrap your model with the ShparkleyModel interface.
