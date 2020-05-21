@@ -6,7 +6,7 @@ from collections import Counter
 from mock import MagicMock
 import pyspark.sql
 from pyspark.sql import Row
-from affirm.ml_pipelines.model_analysis.model_interpretation.shparkley.spark_shapley import (
+from affirm.model_interpretation.shparkley.spark_shapley import (
     compute_shapley_score,
     compute_shapley_for_sample,
     ShparkleyModel
