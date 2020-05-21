@@ -4,14 +4,14 @@ with open("README.rst", "r") as fh:
     long_description = fh.read()
 
 REQUIRED_PACKAGES = [
-    'future~=0.16',
-    'mock~=2.0.0',
-    'pyspark>=2.4.3',
+    'future',
+    'mock',
+    'pyspark',
 ]
 
 setuptools.setup(
     name="shparkley",
-    version="0.0.2",
+    version="0.0.3",
     install_requires=REQUIRED_PACKAGES,
     author="niloygupta",
     author_email="niloy.gupta@affirm.com",
