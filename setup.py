@@ -11,7 +11,7 @@ REQUIRED_PACKAGES = [
 
 setuptools.setup(
     name="shparkley",
-    version="0.0.3",
+    version="0.0.4",
     install_requires=REQUIRED_PACKAGES,
     author="niloygupta",
     author_email="niloy.gupta@affirm.com",
