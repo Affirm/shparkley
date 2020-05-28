@@ -63,7 +63,7 @@ Example Usage
     # You need to sample your dataset based on convergence criteria.
     # More samples results in more accurate shapley values.
     # Repartitioning and caching the sampled dataframe will speed up computation.
-    sampled_df = posv7_df.sample(0.1, True).repartition(75).cache()
+    sampled_df = training_df.sample(0.1, True).repartition(75).cache()
 
     shapley_scores_by_feature = compute_shapley_for_sample(
         df=sampled_df,
