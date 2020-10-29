@@ -1,0 +1,6 @@
+seaborn
+findspark
+pyspark
+sklearn
+networkx
+pydot
