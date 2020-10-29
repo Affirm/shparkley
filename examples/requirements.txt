@@ -1,3 +1,4 @@
+cloudpickle
 seaborn
 findspark
 pyspark
