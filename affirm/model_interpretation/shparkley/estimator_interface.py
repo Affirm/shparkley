@@ -37,14 +37,14 @@ class ShparkleyModel(object):
         # type: () -> OrderedSet[str]
         """
         Returns an ordered set of feature names (ordered so that when recreating a
-        feature matrix from a list of per-row dicts, the columns will be in the expected order)
+        feature matrix from a list of per-row dicts, the columns will be in the expected order).
         :return: OrderedSet of feature names
         """
         raise NotImplementedError
 
     @abstractmethod
     def predict(self, feature_matrix):
-        # type: (List[Dict[str, Any]]) -> List[float]
+        # type: (List[OrderedDict[str, Any]]) -> List[float]
         """
         Run the machine learning model on a feature matrix and return the predictions for each row. Take care to
         construct the feature matrix with the same column ordering that the model was fit on.

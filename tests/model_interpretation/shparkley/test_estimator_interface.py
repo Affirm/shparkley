@@ -37,14 +37,14 @@ class TestOrderedSet(unittest.TestCase):
 
 class TestShparkleyModel(unittest.TestCase):
     def test_api(self):
-        class Violator(ShparkleyModel):
+        class UnorderedRequiredFeaturesShparkleyModel(ShparkleyModel):
             def _get_required_features(self):
                 return {"f1"}
 
             def predict(self, feature_matrix):
                 pass
 
-        class Dutiful(ShparkleyModel):
+        class OrderedRequiredFeaturesShaprkleyModel(ShparkleyModel):
             def _get_required_features(self):
                 return OrderedSet(["f1"])
 
@@ -52,6 +52,6 @@ class TestShparkleyModel(unittest.TestCase):
                 pass
 
         with self.assertRaises(AssertionError):
-            Violator(model=None).get_required_features()
+            UnorderedRequiredFeaturesShparkleyModel(model=None).get_required_features()
 
-        Dutiful(model=None).get_required_features()
+        OrderedRequiredFeaturesShaprkleyModel(model=None).get_required_features()

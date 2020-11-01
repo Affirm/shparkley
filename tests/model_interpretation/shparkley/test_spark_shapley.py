@@ -15,11 +15,11 @@ from affirm.model_interpretation.shparkley.estimator_interface import OrderedSet
 
 class TestShparkleyModel(ShparkleyModel):
 
-    def get_required_features(self):
+    def _get_required_features(self):
         return self._model.get_required_features()
 
     def predict(self, feature_matrix):
-        pd_df = pd.DataFrame.from_dict(feature_matrix)[self.get_required_features()]
+        pd_df = pd.DataFrame.from_dict(feature_matrix)
         preds = self._model.predict(pd_df)
         return preds
 

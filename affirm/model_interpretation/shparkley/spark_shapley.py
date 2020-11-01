@@ -1,10 +1,12 @@
 from __future__ import absolute_import
 from __future__ import division
+from collections import OrderedDict
+from future.builtins import zip, range
+from itertools import permutations, cycle, chain
 from typing import TYPE_CHECKING
+
 import numpy as np
 from pyspark.sql import functions as fn
-from itertools import permutations, cycle, chain
-from future.builtins import zip, range
 
 if TYPE_CHECKING:
     from pyspark.sql import Row, DataFrame
@@ -37,7 +39,7 @@ def compute_shapley_score(partition_index, rand_rows, row_to_investigate, model,
         rand_row_weights.append(rand_row[weight_col_name] if weight_col_name is not None else 1)
         feature_permutation = next(permutation_iter)  # choose permutation o
         # gather: {z_1, ..., z_p}
-        feat_vec_without_feature = {feat_name: rand_row[feat_name] for feat_name in required_features}
+        feat_vec_without_feature = OrderedDict([(feat_name, rand_row[feat_name]) for feat_name in required_features])
         feat_vec_with_feature = feat_vec_without_feature.copy()
         for feat_name in feature_permutation:  # for random feature k.
             # x_+k = {x_1, ..., x_k, .. z_p}
