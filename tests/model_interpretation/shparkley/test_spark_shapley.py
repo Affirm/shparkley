@@ -8,9 +8,9 @@ import pyspark.sql
 from pyspark.sql import Row
 from affirm.model_interpretation.shparkley.spark_shapley import (
     compute_shapley_score,
-    compute_shapley_for_sample,
-    ShparkleyModel
+    compute_shapley_for_sample
 )
+from affirm.model_interpretation.shparkley.estimator_interface import OrderedSet, ShparkleyModel
 
 
 class TestShparkleyModel(ShparkleyModel):
@@ -25,7 +25,7 @@ class TestShparkleyModel(ShparkleyModel):
 
 
 def model_predict_side_effect_function(df):
-    df['score'] = (df['f1'] * 3 + df['f2'] * 5)
+    df['score'] = (df.iloc[:, 0] * 3 + df.iloc[:, 1] * 5)
     return df['score'].values
 
 
@@ -33,7 +33,7 @@ class SparkShapleyTest(unittest.TestCase):
 
     def setUp(self):
         self.m_model = MagicMock()
-        self.m_model.get_required_features.return_value = ['f1', 'f2']
+        self.m_model.get_required_features.return_value = OrderedSet(['f1', 'f2'])
         self.m_model.predict.side_effect = model_predict_side_effect_function
         self.row1 = {
             'f1': 0.01,

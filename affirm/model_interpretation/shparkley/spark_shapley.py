@@ -2,45 +2,13 @@ from __future__ import absolute_import
 from __future__ import division
 from typing import TYPE_CHECKING
 import numpy as np
-from abc import ABCMeta, abstractmethod
-from six import add_metaclass
 from pyspark.sql import functions as fn
 from itertools import permutations, cycle, chain
 from future.builtins import zip, range
 
 if TYPE_CHECKING:
     from pyspark.sql import Row, DataFrame
-    from typing import List, Iterable, Tuple, Dict, Set, Generator, Optional, Any
-
-
-@add_metaclass(ABCMeta)
-class ShparkleyModel(object):
-    """
-    Abstract class for computing Shapley values.
-    """
-    def __init__(self, model):
-        # type: (Any) -> None
-        self._model = model
-
-    @abstractmethod
-    def get_required_features(self):
-        # type: () -> Set[str]
-        """
-        Returns the set of feature names
-        :return: Set of feature names
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def predict(self, feature_matrix):
-        # type: (List[Dict[str, Any]]) -> List[float]
-        """
-        Run the machine learning model on a feature matrix and return the predictions for each row.
-        :param feature_matrix: Row of feature vectors. Each entry is a dictionary mapping
-        from the feature name to feature value
-        :return: Model predictions for all feature vectors
-        """
-        raise NotImplementedError
+    from typing import Iterable, Tuple, Dict, Generator, Optional
 
 
 def compute_shapley_score(partition_index, rand_rows, row_to_investigate, model, weight_col_name=None):
