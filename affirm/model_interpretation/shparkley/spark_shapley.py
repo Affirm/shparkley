@@ -8,6 +8,7 @@ from future.builtins import zip, range
 
 if TYPE_CHECKING:
     from pyspark.sql import Row, DataFrame
+    from affirm.model_interpretation.shparkley.estimator_interface import ShparkleyModel
     from typing import Iterable, Tuple, Dict, Generator, Optional
 
 

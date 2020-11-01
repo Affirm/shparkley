@@ -9,8 +9,8 @@ from collections.abc import MutableSet
 
 class OrderedSet(OrderedDict, MutableSet):
     """
-    Since use pyspark.sql.Row.asDict(), duplicate column names are not supported. However, ordered must be maintained
-    for models that do not check column names explicitly and rely on order during .predict.
+    Since use pyspark.sql.Row.asDict(), duplicate column names are not supported. However, column order must be maintained
+    for models that do not check column names explicitly during prediction.
     """
 
     def __init__(self, *args, **kwargs):
@@ -64,7 +64,8 @@ class ShparkleyModel(object):
     def get_required_features(self):
         # type: () -> OrderedSet[str]
         """
-        Returns the set of feature names :return: OrderedSet of feature names (ordered so that when recreating a
+        Returns an ordered set of feature names
+        :return: OrderedSet of feature names (ordered so that when recreating a
         feature matrix from a list of per-row dicts, the columns will be in the expected order)
         """
         raise NotImplementedError

@@ -19,12 +19,13 @@ class TestShparkleyModel(ShparkleyModel):
         return self._model.get_required_features()
 
     def predict(self, feature_matrix):
-        pd_df = pd.DataFrame.from_dict(feature_matrix)
+        pd_df = pd.DataFrame.from_dict(feature_matrix)[self.get_required_features()]
         preds = self._model.predict(pd_df)
         return preds
 
 
 def model_predict_side_effect_function(df):
+    # uses the feature matrix column ordering rather than the feature names as e.g. some sklearn models do
     df['score'] = (df.iloc[:, 0] * 3 + df.iloc[:, 1] * 5)
     return df['score'].values
 
