@@ -17,8 +17,23 @@ class ShparkleyModel(object):
         # type: (Any) -> None
         self._model = model
 
-    @abstractmethod
     def get_required_features(self):
+        # type: () -> OrderedSet[str]
+        """
+        Returns an ordered set of feature names (ordered so that when recreating a
+        feature matrix from a list of per-row dicts, the columns will be in the expected order)
+        :return: OrderedSet of feature names
+        """
+        features = self._get_required_features()
+        assert isinstance(
+            features, OrderedSet
+        ), "required_features must be an OrderedSet (was {!r} instead)".format(
+            type(features)
+        )
+        return features
+
+    @abstractmethod
+    def _get_required_features(self):
         # type: () -> OrderedSet[str]
         """
         Returns an ordered set of feature names (ordered so that when recreating a
