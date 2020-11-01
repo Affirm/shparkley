@@ -1,7 +1,8 @@
 cloudpickle
-seaborn
 findspark
-pyspark
-sklearn
 networkx
 pydot
+pyspark
+seaborn
+shap
+sklearn
