@@ -3,7 +3,8 @@ from abc import ABCMeta, abstractmethod
 from six import add_metaclass
 from typing import Any, Dict, List
 
-from collections import OrderedDict, MutableSet
+from collections import OrderedDict
+from collections.abc import MutableSet
 
 
 class OrderedSet(OrderedDict, MutableSet):

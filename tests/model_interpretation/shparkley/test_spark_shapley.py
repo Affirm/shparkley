@@ -67,7 +67,7 @@ class SparkShapleyTest(unittest.TestCase):
             row_to_investigate=Row(**self.row_investigate)
         )
         sorted_shapley_scores = sorted([(k, v) for k, v in shapley_scores.items()])
-        self.assertEquals(sorted_shapley_scores, [('f1', 19.79), ('f2', 30.75)])
+        self.assertEqual(sorted_shapley_scores, [('f1', 19.79), ('f2', 30.75)])
 
     def test_compute_shapley_for_sample_weighted(self):
 
@@ -88,7 +88,7 @@ class SparkShapleyTest(unittest.TestCase):
         # row 1, which has small feature vals (=> smaller prediction) weighted more heavily means that compared to
         # baseline, the relatively large features in the sample of interest (=> bigger prediction => more different
         # from row 1) will increase both shapley values to the below compared to unweighted (19.79, 30.75)
-        self.assertEquals(sorted_shapley_scores, [('f1', 20.085), ('f2', 31.125)])
+        self.assertEqual(sorted_shapley_scores, [('f1', 20.085), ('f2', 31.125)])
 
     def test_compute_shapley_score(self):
         row_samples = [Row(**self.row1), Row(**self.row2), Row(**self.row3)]
@@ -164,7 +164,7 @@ class SparkShapleyTest(unittest.TestCase):
         rows = [self.row1, self.row2, self.row3]
         scores = model_predict_side_effect_function(pd.DataFrame.from_dict(rows))
         mean_prediction_on_dataset = sum(scores)/len(rows)
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             first=total_shapley_value,
             second=predicted_value_for_row - mean_prediction_on_dataset,
             delta=0.01
