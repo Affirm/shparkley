@@ -57,8 +57,8 @@ Example Usage
             """
             return self._required_features
 
-        row = dataset.filter(dataset.row_id = 'xxxx').rdd.first()
-        shparkley_wrapped_model = MyShparkleyModel(my_model)
+    row = dataset.filter(dataset.row_id = 'xxxx').rdd.first()
+    shparkley_wrapped_model = MyShparkleyModel(my_model)
 
     # You need to sample your dataset based on convergence criteria.
     # More samples results in more accurate shapley values.
