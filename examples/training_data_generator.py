@@ -8,11 +8,19 @@ from scipy.stats import bernoulli
 
 class Criterion:
     """
-    Stores a lambda function of the form lambda x: x <operator> c
+    Stores a lambda function of the form lambda x: x <operator> c for use in defining branches in a decision tree for
+    generating values from
     """
+
+    implemented_operators = (">", "<=")
 
     def __init__(self, cutoff: Number, comparison_operator: str):
         self.cutoff = cutoff
+        assert (
+            comparison_operator in self.implemented_operators
+        ), "Comparison operator was {!r} but needs to be one of {!r}".format(
+            comparison_operator, self.implemented_operators
+        )
         self.comparison_operator = comparison_operator
 
     def __str__(self):
@@ -98,7 +106,9 @@ def generate_rows_per_leaf(
 
         # Sample based on p_deliquency
         leaf_df.loc[range(n_per_leaf), "{}_label".format(outcome_name)] = bernoulli.rvs(
-            p=tree.nodes[leaf_name]["p_{}".format(outcome_name)], size=n_per_leaf, random_state=seed
+            p=tree.nodes[leaf_name]["p_{}".format(outcome_name)],
+            size=n_per_leaf,
+            random_state=seed,
         )
         dfs.append(leaf_df)
 
