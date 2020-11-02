@@ -37,7 +37,7 @@ def criteria_dict_to_row_values(
     criteria: Dict[str, Criterion], default_row_values: Dict[str, Number]
 ) -> Dict[str, Number]:
     """
-    Given a dictionary with column_name -> Criteria mappinig, output what to set the feature row values to.
+    Given a dictionary with column_name -> Criteria mapping, output what to set the feature row values to.
     """
     output_row_values = default_row_values.copy()
     for column_name, criterion in criteria.items():
@@ -104,7 +104,7 @@ def generate_rows_per_leaf(
             leaf_row_values.values()
         )
 
-        # Sample based on p_deliquency
+        # Sample based on p_delinquency
         leaf_df.loc[range(n_per_leaf), "{}_label".format(outcome_name)] = bernoulli.rvs(
             p=tree.nodes[leaf_name]["p_{}".format(outcome_name)],
             size=n_per_leaf,
