@@ -1,46 +1,17 @@
 from __future__ import absolute_import
 from __future__ import division
-from typing import TYPE_CHECKING
-import numpy as np
-from abc import ABCMeta, abstractmethod
-from six import add_metaclass
-from pyspark.sql import functions as fn
-from itertools import permutations, cycle, chain
+from collections import OrderedDict
 from future.builtins import zip, range
+from itertools import permutations, cycle, chain
+from typing import TYPE_CHECKING
+
+import numpy as np
+from pyspark.sql import functions as fn
 
 if TYPE_CHECKING:
     from pyspark.sql import Row, DataFrame
-    from typing import List, Iterable, Tuple, Dict, Set, Generator, Optional, Any
-
-
-@add_metaclass(ABCMeta)
-class ShparkleyModel(object):
-    """
-    Abstract class for computing Shapley values.
-    """
-    def __init__(self, model):
-        # type: (Any) -> None
-        self._model = model
-
-    @abstractmethod
-    def get_required_features(self):
-        # type: () -> Set[str]
-        """
-        Returns the set of feature names
-        :return: Set of feature names
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def predict(self, feature_matrix):
-        # type: (List[Dict[str, Any]]) -> List[float]
-        """
-        Run the machine learning model on a feature matrix and return the predictions for each row.
-        :param feature_matrix: Row of feature vectors. Each entry is a dictionary mapping
-        from the feature name to feature value
-        :return: Model predictions for all feature vectors
-        """
-        raise NotImplementedError
+    from affirm.model_interpretation.shparkley.estimator_interface import ShparkleyModel
+    from typing import Iterable, Tuple, Dict, Generator, Optional
 
 
 def compute_shapley_score(partition_index, rand_rows, row_to_investigate, model, weight_col_name=None):
@@ -68,7 +39,7 @@ def compute_shapley_score(partition_index, rand_rows, row_to_investigate, model,
         rand_row_weights.append(rand_row[weight_col_name] if weight_col_name is not None else 1)
         feature_permutation = next(permutation_iter)  # choose permutation o
         # gather: {z_1, ..., z_p}
-        feat_vec_without_feature = {feat_name: rand_row[feat_name] for feat_name in required_features}
+        feat_vec_without_feature = OrderedDict([(feat_name, rand_row[feat_name]) for feat_name in required_features])
         feat_vec_with_feature = feat_vec_without_feature.copy()
         for feat_name in feature_permutation:  # for random feature k.
             # x_+k = {x_1, ..., x_k, .. z_p}

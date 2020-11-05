@@ -6,15 +6,16 @@ with open("README.rst", "r") as fh:
 REQUIRED_PACKAGES = [
     'future',
     'mock',
+    'numpy',
     'pyspark',
 ]
 
 setuptools.setup(
     name="shparkley",
-    version="0.0.4",
+    version="1.0.0",
     install_requires=REQUIRED_PACKAGES,
-    author="niloygupta",
-    author_email="niloy.gupta@affirm.com",
+    author="niloygupta, isaacjoseph",
+    author_email="niloy.gupta@affirm.com, isaac.c.joseph@gmail.com",
     description="Scaling Shapley Value computation using Spark",
     long_description=long_description,
     long_description_content_type="text/x-rst",

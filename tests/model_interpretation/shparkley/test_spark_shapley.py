@@ -8,14 +8,14 @@ import pyspark.sql
 from pyspark.sql import Row
 from affirm.model_interpretation.shparkley.spark_shapley import (
     compute_shapley_score,
-    compute_shapley_for_sample,
-    ShparkleyModel
+    compute_shapley_for_sample
 )
+from affirm.model_interpretation.shparkley.estimator_interface import OrderedSet, ShparkleyModel
 
 
 class TestShparkleyModel(ShparkleyModel):
 
-    def get_required_features(self):
+    def _get_required_features(self):
         return self._model.get_required_features()
 
     def predict(self, feature_matrix):
@@ -25,7 +25,8 @@ class TestShparkleyModel(ShparkleyModel):
 
 
 def model_predict_side_effect_function(df):
-    df['score'] = (df['f1'] * 3 + df['f2'] * 5)
+    # uses the feature matrix column ordering rather than the feature names as e.g. some sklearn models do
+    df['score'] = (df.iloc[:, 0] * 3 + df.iloc[:, 1] * 5)
     return df['score'].values
 
 
@@ -33,7 +34,7 @@ class SparkShapleyTest(unittest.TestCase):
 
     def setUp(self):
         self.m_model = MagicMock()
-        self.m_model.get_required_features.return_value = ['f1', 'f2']
+        self.m_model.get_required_features.return_value = OrderedSet(['f1', 'f2'])
         self.m_model.predict.side_effect = model_predict_side_effect_function
         self.row1 = {
             'f1': 0.01,
@@ -67,7 +68,7 @@ class SparkShapleyTest(unittest.TestCase):
             row_to_investigate=Row(**self.row_investigate)
         )
         sorted_shapley_scores = sorted([(k, v) for k, v in shapley_scores.items()])
-        self.assertEquals(sorted_shapley_scores, [('f1', 19.79), ('f2', 30.75)])
+        self.assertEqual(sorted_shapley_scores, [('f1', 19.79), ('f2', 30.75)])
 
     def test_compute_shapley_for_sample_weighted(self):
 
@@ -88,7 +89,7 @@ class SparkShapleyTest(unittest.TestCase):
         # row 1, which has small feature vals (=> smaller prediction) weighted more heavily means that compared to
         # baseline, the relatively large features in the sample of interest (=> bigger prediction => more different
         # from row 1) will increase both shapley values to the below compared to unweighted (19.79, 30.75)
-        self.assertEquals(sorted_shapley_scores, [('f1', 20.085), ('f2', 31.125)])
+        self.assertEqual(sorted_shapley_scores, [('f1', 20.085), ('f2', 31.125)])
 
     def test_compute_shapley_score(self):
         row_samples = [Row(**self.row1), Row(**self.row2), Row(**self.row3)]
@@ -164,7 +165,7 @@ class SparkShapleyTest(unittest.TestCase):
         rows = [self.row1, self.row2, self.row3]
         scores = model_predict_side_effect_function(pd.DataFrame.from_dict(rows))
         mean_prediction_on_dataset = sum(scores)/len(rows)
-        self.assertAlmostEquals(
+        self.assertAlmostEqual(
             first=total_shapley_value,
             second=predicted_value_for_row - mean_prediction_on_dataset,
             delta=0.01
