@@ -10,7 +10,7 @@ Shparkley is a PySpark implementation of
 which uses a `monte-carlo approximation <https://link.springer.com/article/10.1007/s10115-013-0679-x>`_ algorithm.
 
 Given a dataset and machine learning model, Shparkley can compute Shapley values for all features for a feature vector.
-Shparkley also handles training weights and is model agnostic.
+Shparkley also handles training weights and is model-agnostic.
 
 Installation
 ------------
@@ -27,37 +27,37 @@ Example Usage
 
 .. code-block:: python
 
-    from affirm.model_interpretation.shparkley.spark_shapley import (
-        compute_shapley_for_sample,
-        ShparkleyModel
-    )
+    from typing import List
+
+    from sklearn.base import ClassifierMixin
+
+    from affirm.model_interpretation.shparkley.estimator_interface import OrderedSet, ShparkleyModel
+    from affirm.model_interpretation.shparkley.spark_shapley import compute_shapley_for_sample
+
 
     class MyShparkleyModel(ShparkleyModel):
-    """
-    You need to wrap your model with the ShparkleyModel interface.
-    """
-        def get_required_features(self):
-            # type: () -> Set[str]
-            """
-            Needs to return a set of feature names for the model.
-            """
-            return ['feature-1', 'feature-2', 'feature-3']
+        """
+        You need to wrap your model with this interface (by subclassing ShparkleyModel)
+        """
+        def __init__(self, model: ClassifierMixin, required_features: OrderedSet):
+            self._model = model
+            self._required_features = required_features
 
-        def predict(self, feature_matrix):
-            # type: (List[Dict[str, Any]]) -> List[float]
+        def predict(self, feature_matrix: List[OrderedDict]) -> List[float]:
             """
-            Wrapper function to convert the feature matrix into an acceptable format for your model.
-            This function should return the predicted probabilities.
-            The feature_matrix is a list of feature dictionaries.
-            Each dictionary has a mapping from the feature name to the value.
-            :return: Model predictions for all feature vectors
+            Generates one prediction per row, taking in a list of ordered dictionaries (one per row).
             """
-            # Convert the feature matrix into an appropriate form for your model object.
             pd_df = pd.DataFrame.from_dict(feature_matrix)
-            preds = self._model.my_predict(pd_df)
+            preds = self._model.predict_proba(pd_df)[:, 1]
             return preds
 
-    row = dataset.filter(dataset.row_id = 'xxxx').rdd.first()
+        def _get_required_features(self) -> OrderedSet:
+            """
+            An ordered set of feature column names
+            """
+            return self._required_features
+
+    row = dataset.filter(dataset.row_id == 'xxxx').rdd.first()
     shparkley_wrapped_model = MyShparkleyModel(my_model)
 
     # You need to sample your dataset based on convergence criteria.
